@@ -12,7 +12,7 @@ public class Cab{
 
     private int perKmRate;
 
-    private boolean available;
+    private boolean Available;
 
 
     @OneToOne
@@ -38,12 +38,12 @@ public class Cab{
         this.perKmRate = perKmRate;
     }
 
-    public boolean isAvailable() {
-        return available;
+    public boolean getAvailable() {
+        return Available;
     }
 
     public void setAvailable(boolean available) {
-        this.available = available;
+        this.Available = available;
     }
 
     public Driver getDriver() {
