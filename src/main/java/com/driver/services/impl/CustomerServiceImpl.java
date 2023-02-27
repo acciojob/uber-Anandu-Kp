@@ -13,6 +13,8 @@ import com.driver.repository.TripBookingRepository;
 import com.driver.model.TripStatus;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -48,6 +50,7 @@ public class CustomerServiceImpl implements CustomerService {
 		boolean gotdriver=false;
 		Driver availibleDriver=new Driver();
 		List<Driver> drivers=driverRepository2.findAll();
+
 		for(Driver driver:drivers)
 		{
 			if(driver.getCab().getAvailable())
@@ -71,8 +74,8 @@ public class CustomerServiceImpl implements CustomerService {
 		tripBooking.setStatus(TripStatus.CONFIRMED);
 		tripBooking.setBill(distanceInKm*10);
 
-		availibleDriver.getCab().setAvailable(false);
-		tripBookingRepository2.save(tripBooking);
+		availibleDriver.getCab().setAvailable(Boolean.TRUE);
+		//tripBookingRepository2.save(tripBooking);
 
 		customerRepository2.findById(customerId).get().getTripBookingList().add(tripBooking);
 		customerRepository2.save(customerRepository2.findById(customerId).get());
@@ -86,7 +89,7 @@ public class CustomerServiceImpl implements CustomerService {
 	public void cancelTrip(Integer tripId){
 		//Cancel the trip having given trip Id and update TripBooking attributes accordingly
 		TripBooking trip=tripBookingRepository2.findById(tripId).get();
-		trip.getDriver().getCab().setAvailable(true);
+		trip.getDriver().getCab().setAvailable(Boolean.TRUE);
 		trip.setStatus(TripStatus.CANCELED);
 		trip.setBill(0);
 		driverRepository2.save(trip.getDriver());
@@ -97,7 +100,8 @@ public class CustomerServiceImpl implements CustomerService {
 	public void completeTrip(Integer tripId){
 		//Complete the trip having given trip Id and update TripBooking attributes accordingly
 		TripBooking trip=tripBookingRepository2.findById(tripId).get();
-		trip.getDriver().getCab().setAvailable(true);
+		trip.getDriver().getCab().setAvailable(Boolean.TRUE);
+		trip.setBill(trip.getDriver().getCab().getPerKmRate()*trip.getDistanceInKm());
 		trip.setStatus(TripStatus.COMPLETED);
 		driverRepository2.save(trip.getDriver());
 
